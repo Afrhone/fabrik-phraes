@@ -1,0 +1,19 @@
+{
+  "name": "fabrik",
+  "version": "0.1.0",
+  "description": "Fabrik microservice for the Factory ecosystem",
+  "endpoints": {
+    "health": "/api/health",
+    "info": "/api/info"
+  },
+  "capabilities": ["http", "webhook"],
+  "webhook": {
+    "events": ["push", "release"],
+    "payload": {
+      "service": "fabrik",
+      "repo": "${GITHUB_REPOSITORY}",
+      "commit": "${GITHUB_SHA}",
+      "ref": "${GITHUB_REF}"
+    }
+  }
+}

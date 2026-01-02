@@ -1,0 +1,75 @@
+name: Fabrik Hypernode Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Bundle Fabrik Hypernode
+        run: |
+          node -v
+          node fabrik/cli/fabrik.mjs hypernode bundle
+          ls -la fabrik/dist || true
+
+      - name: Generate Checksums
+        run: |
+          cd fabrik/dist
+          sha256sum fabrik-bundle.tar.gz > fabrik-bundle.tar.gz.sha256
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fabrik-bundle
+          path: |
+            fabrik/dist/fabrik-bundle.tar.gz
+            fabrik/dist/fabrik-bundle.tar.gz.sha256
+
+      - name: GPG Sign (optional)
+        if: env.GPG_PRIVATE_KEY != ''
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 \
+            --output fabrik/dist/fabrik-bundle.tar.gz.asc --armor --detach-sign fabrik/dist/fabrik-bundle.tar.gz
+
+      - name: Upload Signature (optional)
+        if: env.GPG_PRIVATE_KEY != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: fabrik-bundle-signature
+          path: fabrik/dist/fabrik-bundle.tar.gz.asc
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: false
+          prerelease: false
+          files: |
+            fabrik/dist/fabrik-bundle.tar.gz
+            fabrik/dist/fabrik-bundle.tar.gz.sha256
+            fabrik/dist/fabrik-bundle.tar.gz.asc
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

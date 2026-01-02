@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: fabrik_mongo
+    ports:
+      - "27020:27017"  # host:container
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-factory_admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-change_me}
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ping:1}).ok" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: ..  # assumes Dockerfile at repo root
+    container_name: fabrik_app
+    depends_on:
+      - mongo
+    environment:
+      NODE_ENV: production
+      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/factory?authSource=admin}
+      MONGO_DB: ${MONGO_DB:-factory}
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL:-http://localhost:3101}
+    ports:
+      - "3101:3000"
+    command: ["npm", "run", "start"]
+
+volumes:
+  mongo_data: {}
+

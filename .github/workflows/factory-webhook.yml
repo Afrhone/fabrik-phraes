@@ -1,0 +1,29 @@
+name: Factory Webhook Notify
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [published]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+      - name: Post to Factory webhook (if configured)
+        env:
+          FACTORY_WEBHOOK_URL: ${{ secrets.FACTORY_WEBHOOK_URL }}
+        run: |
+          if [ -z "$FACTORY_WEBHOOK_URL" ]; then
+            echo "No FACTORY_WEBHOOK_URL configured; skipping"; exit 0; fi
+          ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          json=$(jq -n \
+            --arg event "${{ github.event_name }}" \
+            --arg repo "${{ github.repository }}" \
+            --arg ref "${{ github.ref }}" \
+            --arg sha "${{ github.sha }}" \
+            --arg ts "$ts" \
+            '{service:"fabrik", event:$event, repo:$repo, ref:$ref, sha:$sha, ts:$ts}')
+          curl -sS -X POST "$FACTORY_WEBHOOK_URL" -H 'Content-Type: application/json' -d "$json"

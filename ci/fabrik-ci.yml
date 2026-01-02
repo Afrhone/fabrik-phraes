@@ -1,0 +1,29 @@
+name: Fabrik CI
+
+on:
+  push:
+    paths:
+      - 'fabrik/**'
+      - 'scripts/**'
+      - 'src/**'
+  workflow_dispatch: {}
+
+jobs:
+  lint-build:
+    runs-on: ubuntu-latest
+    env:
+      MONGO_URL: ${{ secrets.MONGO_URL || 'mongodb://127.0.0.1:27017/factory?authSource=admin' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci --prefer-offline
+      - run: npm run -s build || echo "skip build if not configured"
+      - name: Archive Fabrik bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: fabrik-bundle
+          path: |
+            fabrik/**
+

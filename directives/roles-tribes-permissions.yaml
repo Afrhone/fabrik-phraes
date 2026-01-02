@@ -1,0 +1,58 @@
+# Role, Tribe, Permission Mapping (Template)
+
+roles:
+  - id: superadmin
+    label: Super Admin
+    grants:
+      - "*"
+  - id: admin
+    label: Admin
+    grants:
+      - "read:*"
+      - "write:*"
+      - "manage:users"
+  - id: operator
+    label: Operator
+    grants:
+      - "write:content"
+      - "manage:jobs"
+  - id: creator
+    label: Creator
+    grants:
+      - "write:content"
+  - id: sudoer
+    label: Sudoer (derived)
+    derived_from: [admin, superadmin]
+
+tribes:
+  - id: guardians
+    label: Guardians
+    features: [risk_dashboard, policy_editor]
+  - id: operators
+    label: Operators
+    features: [pipeline_controls, scheduler]
+  - id: creators
+    label: Creators
+    features: [studio, gallery]
+
+permissions:
+  - read:content
+  - write:content
+  - manage:users
+  - manage:jobs
+  - "*"
+
+feature_gates:
+  risk_dashboard:
+    roles_any: [admin, superadmin]
+  policy_editor:
+    roles_any: [superadmin]
+  pipeline_controls:
+    roles_any: [operator, admin, superadmin]
+  scheduler:
+    roles_any: [operator, admin, superadmin]
+  studio:
+    roles_any: [creator, admin, superadmin]
+  gallery:
+    roles_any: [creator, admin, superadmin]
+

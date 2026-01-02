@@ -1,0 +1,20 @@
+{
+  "name": "fabrik-service",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "license": "MIT",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node src/server.js",
+    "start": "node src/server.js",
+    "test": "node --test tests",
+    "build": "echo 'JS template: nothing to build'",
+    "factory:register": "node scripts/factory-register.mjs"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5",
+    "node-fetch": "^3.3.2"
+  }
+}

@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  hypernode:
+    image: node:20-alpine
+    container_name: fabrik_hypernode
+    working_dir: /app
+    command: ["node","fabrik/hypernode/runner.mjs"]
+    env_file:
+      - ./.env
+    volumes:
+      - ../..:/app:ro
+    restart: unless-stopped

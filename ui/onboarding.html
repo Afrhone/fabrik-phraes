@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fabrik Onboarding</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <h1>Fabrik — Minimal Factory Setup</h1>
+    <ol>
+      <li>Configure Mongo: <code>bash fabrik/scripts/configure-mongo.sh --env-file .env</code></li>
+      <li>If needed, map <code>mongo</code> to an IP: <code>sudo bash fabrik/scripts/apply-hosts.sh 127.0.0.1</code></li>
+      <li>Seed admin: <code>bash fabrik/scripts/seed-admin.sh --env-file scripts/admin.env --force</code></li>
+      <li>Generate config: <code>node fabrik/cli/fabrik.mjs --interactive</code></li>
+      <li>Docker (optional): <code>docker compose -f fabrik/docker/docker-compose.yml up -d</code></li>
+    </ol>
+    <p>Review directives in <code>fabrik/directives</code> for security, roles/tribes, psyche gates, and Mongo options.</p>
+  </div>
+</body>
+  
+</html>
+

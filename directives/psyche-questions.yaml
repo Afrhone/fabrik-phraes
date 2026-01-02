@@ -1,0 +1,40 @@
+# Psyche Assessment (Template)
+
+dimensions:
+  - id: blossoming
+    prompt: "When learning, I feel energized by discovery and growth."
+  - id: emancipation
+    prompt: "I prefer autonomy and removing constraints over step-by-step guidance."
+  - id: depth
+    prompt: "I enjoy exploring complex topics in great detail."
+  - id: substance
+    prompt: "I value practical outcomes and tangible results."
+  - id: emotion
+    prompt: "I make decisions with empathic awareness and affective cues."
+  - id: critic
+    prompt: "I challenge assumptions and seek contradictions to refine ideas."
+  - id: tension
+    prompt: "I thrive under constraints and deadlines, using them as creative fuel."
+  - id: meditation
+    prompt: "I prefer calm focus, reflection, and mindful pacing."
+
+scales:
+  likert5: [1,2,3,4,5]
+
+archetypes:
+  - id: kobalt
+    bias: { depth: 0.6, substance: 0.5, critic: 0.4 }
+  - id: phoebii
+    bias: { blossoming: 0.6, emotion: 0.5, meditation: 0.4 }
+  - id: umowt
+    bias: { emancipation: 0.5, tension: 0.4, substance: 0.3 }
+
+mappings:
+  # Map high scores to feature toggles
+  studio:
+    require_any: { blossoming: 4, depth: 4 }
+  risk_dashboard:
+    require_any: { critic: 4, substance: 5 }
+  policy_editor:
+    require_any: { depth: 5, critic: 5 }
+

@@ -1,0 +1,20 @@
+[#] Copy to /etc/systemd/system/hypernode.service and adjust paths as needed
+[Unit]
+Description=Fabrik Hypernode Runner
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Update WorkingDirectory to the cloned repo path
+WorkingDirectory=/opt/fabrik
+# Update EnvironmentFile to your hypernode env
+EnvironmentFile=/opt/fabrik/fabrik/hypernode/.env
+ExecStart=/usr/bin/env node fabrik/hypernode/runner.mjs
+Restart=on-failure
+RestartSec=5
+# User=fabrik
+
+[Install]
+WantedBy=multi-user.target
+
