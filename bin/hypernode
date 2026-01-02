@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"
+FABRIK_DIR="$ROOT_DIR/fabrik"
+STACK_FILE="$ROOT_DIR/docker-compose.yml"
+SCRIPTS_DIR="$ROOT_DIR/scripts"
+
+note(){ printf "[phraes] %s\n" "$*"; }
+fail(){ printf "[phraes] ERROR: %s\n" "$*" >&2; exit 1; }
+
+ensure(){ mkdir -p "$FABRIK_DIR" "$FABRIK_DIR/secrets" "$FABRIK_DIR/env" "$ROOT_DIR/dist"; }
+
+usage(){ cat <<EOF
+Fabrik‑Phraes CLI
+Usage:
+  hypernode init|build|up|down|status|keys|export
+EOF
+}
+
+init(){ ensure; "$SCRIPTS_DIR/generate-env.sh"; cp -n "$ROOT_DIR/fabrik/examples/hypernode.yml" "$FABRIK_DIR/hypernode.yml" 2>/dev/null || true; }
+build(){ docker compose -f "$STACK_FILE" build --no-cache || fail "build"; }
+up(){ docker compose -f "$STACK_FILE" up -d || fail "up"; }
+down(){ docker compose -f "$STACK_FILE" down -v || true; }
+status(){ curl -fsS http://127.0.0.1:8020/api/hypernode/health || echo "gateway unreachable"; }
+keys(){ "$SCRIPTS_DIR/pki.sh" generate; }
+export_bundle(){ "$SCRIPTS_DIR/export.sh"; }
+
+case "${1:-}" in
+  init) init ;;
+  build) build ;;
+  up) up ;;
+  down) down ;;
+  status) status ;;
+  keys) keys ;;
+  export) export_bundle ;;
+  *) usage ;;
+esac
+

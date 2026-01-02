@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  hypernode-gateway:
+    build:
+      context: ./services/hypernode-gateway
+      dockerfile: Dockerfile
+    image: oss-fabrik-phraes-hypernode-gateway:latest
+    container_name: fabrikhypernode_gateway
+    environment:
+      - NODE_ENV=${NODE_ENV:-dev}
+      - HYPERNODE_SHARED_SECRET=${HYPERNODE_SHARED_SECRET:-change-me}
+      - HYPERNODE_CONFIG=/data/fabrik/hypernode.yml
+      - FABRIK_DIR=/data/fabrik
+    volumes:
+      - ./fabrik:/data/fabrik:rw
+    ports:
+      - "127.0.0.1:8020:8020"
+    restart: unless-stopped
+

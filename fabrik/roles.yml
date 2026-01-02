@@ -1,0 +1,12 @@
+roles:
+  - id: admin
+    permissions:
+      - "* : *"
+  - id: operator
+    permissions:
+      - "node:read"
+      - "deploy:run"
+  - id: viewer
+    permissions:
+      - "node:read"
+

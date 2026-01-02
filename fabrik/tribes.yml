@@ -1,0 +1,8 @@
+tribes:
+  - id: core
+    description: Core maintainers
+  - id: artists
+    description: Creative cohort
+  - id: research
+    description: Analysis & safety
+

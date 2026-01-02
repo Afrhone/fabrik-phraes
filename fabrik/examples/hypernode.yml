@@ -1,0 +1,25 @@
+name: fabrik-phraes-local
+cluster: afrhoneth
+env: dev
+resources:
+  cpu_quota: medium
+  memory_quota: medium
+  storage: local
+gate:
+  roles_file: ./fabrik/roles.yml
+  tribes_file: ./fabrik/tribes.yml
+security:
+  token_issuer: hypernode-gateway
+  secret_env: HYPERNODE_SHARED_SECRET
+network:
+  overlay: hypergraph_overlay
+  ws: true
+  advertise_services:
+    - hypernode-gateway
+export:
+  dist: ./dist
+  include:
+    - fabrik
+    - services
+    - docker-compose.yml
+

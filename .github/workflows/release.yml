@@ -1,0 +1,22 @@
+name: Fabrik-Phraes Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pack bundle
+        run: |
+          mkdir -p dist
+          tar -czf dist/fabrik-phraes.tar.gz -C . .
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fabrik-phraes
+          path: dist/*.tar.gz
+
