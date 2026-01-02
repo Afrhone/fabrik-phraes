@@ -18,12 +18,12 @@ Quickstart
 
 Install via curl (example)
 ```
-# Recommended: run the installer script hosted at (replace <org>/<repo>):
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/<org>/<repo>/main/open-source/fabrik-phraes/install.sh)"
+# Recommended: run the installer script hosted at:
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Afrhone/fabrik-phraes/main/open-source/fabrik-phraes/install.sh)"
 
 # Or export a release URL first (CI can publish to GitHub Releases):
-export FABRIK_PHRAES_URL="https://github.com/<org>/<repo>/releases/download/v0.1.0/fabrik-phraes.tar.gz"
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/<org>/<repo>/main/open-source/fabrik-phraes/install.sh)"
+export FABRIK_PHRAES_URL="https://github.com/Afrhone/fabrik-phraes/releases/download/v0.1.0/fabrik-phraes.tar.gz"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Afrhone/fabrik-phraes/main/open-source/fabrik-phraes/install.sh)"
 ```
 
 Directory
